@@ -4,9 +4,9 @@
 
 ### Gruppo 1
 
-Nome e cognome  
-Nome e cognome  
-Nome e cognome  
+Tartaro   
+Guberti  
+Rognoni    
 
 ### Docente
 
