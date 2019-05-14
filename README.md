@@ -69,3 +69,7 @@ git push origin master
 
 ### Consegna
 Entro il 31/05/2019
+
+### Note  
+In caso di richiesta di chiarimenti potete scrivere alla mail personale del docente: lorenzo.dev@gmail.com  
+Buon lavoro!
