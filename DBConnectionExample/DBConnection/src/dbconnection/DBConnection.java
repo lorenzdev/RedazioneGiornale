@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dbconnection;
 
 import java.sql.Connection;
@@ -89,7 +84,7 @@ public class DBConnection {
                System.out.printf("Cognome: %s\t\n",resultSet.getString("cognome"));
                System.out.printf("Indirizzo: %s\t\n",resultSet.getString("indirizzo"));
                System.out.printf("Città: %s",resultSet.getString("citta"));
-               System.out.printf("\n\n");
+               System.out.printf("\n\n ");
                cont++;
             }
         }catch(SQLException sql_ex){
