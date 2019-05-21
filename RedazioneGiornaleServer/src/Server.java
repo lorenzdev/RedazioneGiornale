@@ -19,10 +19,15 @@ public class Server {
     private static int porta = 9999;
     private static File news = new File("News.xml");
     private static File utenti = new File("Utenti.xml");
+    private static DBConnection dbc;
+  
     public static void main(String[] args){
         try{
             System.out.println("Creazione server socket...");
             ServerSocket server = new ServerSocket(porta);
+            System.out.println("...conversione database in xml...");
+            dbc = new DBConnection();
+            dbc.ConversioneDBtoXML();
             System.out.println("...in attesa di connessioni...");
             while(true){
                 Socket client = server.accept();
@@ -32,6 +37,8 @@ public class Server {
             }
         }catch(Exception ex){
             ex.printStackTrace();
+        }finally{
+            dbc.ConversioneXMLtoDB();
         }
     }
 }

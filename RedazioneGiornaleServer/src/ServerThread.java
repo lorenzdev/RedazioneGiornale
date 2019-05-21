@@ -16,17 +16,17 @@ import javax.xml.transform.stream.StreamResult;
  * @author totaro.christian
  */
 public class ServerThread extends Thread{
-    private Socket client;
-    private BufferedReader in;
-    private PrintWriter out;
-    private DocumentBuilderFactory dbFactory;
-    private DocumentBuilder dBuilder;
-    private Document docNews;
-    private Node rootNews;
-    private NodeList listNews;
-    private Document docUtenti;
-    private Node rootUtenti;
-    private NodeList listUtenti;
+    private static Socket client;
+    private static BufferedReader in;
+    private static PrintWriter out;
+    private static DocumentBuilderFactory dbFactory;
+    private static DocumentBuilder dBuilder;
+    private static Document docNews;
+    private static Node rootNews;
+    private static NodeList listNews;
+    private static Document docUtenti;
+    private static Node rootUtenti;
+    private static NodeList listUtenti;
     
     public ServerThread(Socket client,File news,File utenti){
         this.client = client;
@@ -46,6 +46,23 @@ public class ServerThread extends Thread{
             ex.printStackTrace();
         }
     }
+    private static void ControlloCredenziali(String email, String password){
+        System.out.println("...controllo delle credenziali...");
+        //CONTROLLO DELLE CREDENZIALI
+        boolean login = false;
+        for(int i=0; i<listUtenti.getLength();i++){
+            Node utente = listUtenti.item(i);
+            if(utente.getNodeType() == Node.ELEMENT_NODE){
+                Element el = (Element)utente;
+                if(el.getElementsByTagName("email").equals(email) && el.getElementsByTagName("password").equals(password))
+                    login = true;
+            }
+        }
+        if(login){
+            out.println("login avvenuto con successo");
+            System.out.println("login avvenuto con successo");
+        }
+    }
     
     @Override
     public void run(){
@@ -57,21 +74,7 @@ public class ServerThread extends Thread{
             System.out.println("[ email: "+email+" ]");
             String password = in.readLine();//
             System.out.println("[ password: "+password+" ]");
-            System.out.println("...controllo delle credenziali...");
-            //CONTROLLO DELLE CREDENZIALI
-            boolean login = false;
-            for(int i=0; i<listUtenti.getLength();i++){
-                Node utente = listUtenti.item(i);
-                if(utente.getNodeType() == Node.ELEMENT_NODE){
-                    Element el = (Element)utente;
-                    if(el.getElementsByTagName("email").equals(email) && el.getElementsByTagName("password").equals(password))
-                        login = true;
-                }
-            }
-            if(login){
-                out.println("login avvenuto con successo");
-                System.out.println("login avvenuto con successo");
-            }
+            ControlloCredenziali(email,password);
             out.println("end");
             System.out.println("...chiusura connessione "+client.getLocalAddress()+" ...");
             client.close();
