@@ -11,36 +11,36 @@ $dbpass="";
 $conn=mysqli_connect($dbhost,$dbuser,$dbpass);
 if(!$conn)die("".mysqli_error($conn));
 
-$sql="CREATE DATABASE GIORNALE";
+$sql="CREATE DATABASE Giornale";
 $ok=mysqli_query($conn,$sql);
 if(!$ok)die("errore".mysqli_error($conn));
 echo "db creato";
 
-$sql="USE GIORNALE";
+$sql="USE Giornale";
 $ok=mysqli_query($conn,$sql);
 if(!$ok)die("".mysqli_error($conn));
 echo "db in uso";
 
 $sql="CREATE TABLE Utenti(
-EmailUtente varchar(20) PRIMARY KEY,
-Nome varchar(10),
-Cognome varchar(10),
-Password varchar(10),
-Telefono integer(10),
-DataDiNascita date,
-Indirizzo varchar(15),
-Citta varchar(10))";
+		email varchar(50) PRIMARY KEY,
+		password varchar(10),
+		nome varchar(10),
+		cognome varchar(10),
+		telefono varchar(10),
+		data_nascita date,
+		indirizzo_residenza varchar(30),
+		citta_residenza varchar(30))";
 $ok=mysqli_query($conn,$sql);
 if(!$ok)die("tabella non creata".mysqli_error($conn));
 
 $sql="CREATE TABLE News(
-EmailUtente varchar(20),
-Data date,
-Contenuto text,
-Descrizione text,
-Titolo varchar(20) PRIMARY KEY,
-Topic varchar(10),
-FOREIGN KEY (EmailUtente) REFERENCES Utenti(EmailUtente))";
+		topic varchar(20),
+		titolo varchar(50) PRIMARY KEY,
+		descrizione text,
+		contenuto text,
+		data date,
+		email_autore varchar(50),
+		FOREIGN KEY (email_autore) REFERENCES Utenti(email))";
 $ok=mysqli_query($conn,$sql);
 if(!$ok)die("tabella non creata".mysqli_error($conn));
 ?>
