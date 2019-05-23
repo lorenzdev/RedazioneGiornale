@@ -31,25 +31,38 @@ public static void main(String[] args){
             PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             
-            //richiedo email e password e li mando al server
-            System.out.println("inserisci la tua email");
-            String email = scanner.nextLine();
-            out.println(email);
-            
-            System.out.println("inserisci la password");
-            String password = scanner.nextLine();
-            out.println(password);
-            
-            String mem=in.readLine();
-            
-            //attendo una risposta dal server
-            while(mem!=null){   
+            //menu scelta login/iscrizione
+            System.out.println(" A) Login\n B) Iscrizione");
+            String scelta = scanner.nextLine();
+            out.println(scelta);
+            if(scelta.equals("A")){
+                //richiedo email e password e li mando al server
+                System.out.println("inserisci la tua email");
+                String email = scanner.nextLine();
+                out.println(email);
+
+                System.out.println("inserisci la password");
+                String password = scanner.nextLine();
+                out.println(password);
+
+                String mem=in.readLine();
+                System.out.println(mem);
                 
-            System.out.println(mem);
-            
-            mem=in.readLine();
-                   client.close();
-            }
+                //menu scelta operazione
+                System.out.println(" A) Richiedi news\n B) Inserisci news");
+                scelta = scanner.nextLine();
+                out.println(scelta);
+                
+                mem=in.readLine();
+                System.out.println(mem);
+                
+                //attendo una risposta dal server
+                /*while(mem!="end"){   
+                    System.out.println(mem);
+                    mem=in.readLine(); 
+                }*/
+                client.close();
+           }
         }catch(Exception ex){
             ex.printStackTrace();
         }

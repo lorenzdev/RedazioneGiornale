@@ -34,18 +34,19 @@ public class ServerThread extends Thread{
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
             
+            docUtenti = dBuilder.parse(utenti);
+            rootUtenti = docUtenti.getFirstChild();
+            listUtenti = ((Element)rootUtenti).getElementsByTagName("Utente");
+            
             docNews = dBuilder.parse(news);
             rootNews = docNews.getFirstChild();
-            listNews = ((Element)rootNews).getElementsByTagName("news");
-            
-            docUtenti = dBuilder.parse(news);
-            rootUtenti = docUtenti.getFirstChild();
-            listUtenti = ((Element)rootUtenti).getElementsByTagName("utente");
+            listNews = ((Element)rootNews).getElementsByTagName("News"); 
         }catch(Exception ex){
             System.out.println("Errore lettura file xml");
             ex.printStackTrace();
         }
     }
+    
     private static void ControlloCredenziali(String email, String password){
         System.out.println("...controllo delle credenziali...");
         //CONTROLLO DELLE CREDENZIALI
@@ -54,13 +55,17 @@ public class ServerThread extends Thread{
             Node utente = listUtenti.item(i);
             if(utente.getNodeType() == Node.ELEMENT_NODE){
                 Element el = (Element)utente;
-                if(el.getElementsByTagName("email").equals(email) && el.getElementsByTagName("password").equals(password))
+                System.out.println(el.getElementsByTagName("email").toString()+" "+email+" "+el.getElementsByTagName("password").toString()+" "+password+"\n");
+                if(el.getElementsByTagName("email").toString().equals(email) && el.getElementsByTagName("password").toString().equals(password))
                     login = true;
             }
         }
         if(login){
             out.println("login avvenuto con successo");
             System.out.println("login avvenuto con successo");
+        }else{
+            out.println("nome utente o password non validi");
+            System.out.println("nome utente o password non validi");
         }
     }
     
@@ -69,12 +74,24 @@ public class ServerThread extends Thread{
         try{
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())),true);
-            System.out.println("...in attesa delle credenziali...");
-            String email = in.readLine();//
-            System.out.println("[ email: "+email+" ]");
-            String password = in.readLine();//
-            System.out.println("[ password: "+password+" ]");
-            ControlloCredenziali(email,password);
+            System.out.println("...in attesa di ordini dal client...");
+            String scelta = in.readLine();
+            if(scelta.equals("A")){
+                System.out.println("...in attesa delle credenziali...");
+                String email = in.readLine();//
+                System.out.println("[ email: "+email+" ]");
+                String password = in.readLine();//
+                System.out.println("[ password: "+password+" ]");
+                ControlloCredenziali(email,password);
+            }
+            System.out.println("...in attesa di ordini dal client loggato...");
+            scelta = in.readLine();
+            if(scelta.equals("A")){
+                System.out.println("Hai richiesto news...");
+            }
+            if(scelta.equals("B")){
+                System.out.println("Vuoi inserire news...");
+            }
             out.println("end");
             System.out.println("...chiusura connessione "+client.getLocalAddress()+" ...");
             client.close();

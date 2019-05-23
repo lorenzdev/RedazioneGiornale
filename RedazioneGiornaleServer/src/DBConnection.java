@@ -116,7 +116,7 @@ public class DBConnection {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("Z:\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml"));
+            StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml"));
             transformer.transform(source, result);
             System.out.println("    ...conversione file News.xml...");
             // root elements
@@ -152,7 +152,7 @@ public class DBConnection {
             transformerFactory = TransformerFactory.newInstance();
             transformer = transformerFactory.newTransformer();
             source = new DOMSource(doc);
-            result = new StreamResult(new File("Z:\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml"));
+            result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml"));
             transformer.transform(source, result);
       } catch (ParserConfigurationException pce) {
             pce.printStackTrace();

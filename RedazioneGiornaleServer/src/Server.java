@@ -17,8 +17,8 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class Server {
     private static int porta = 9999;
-    private static File news = new File("News.xml");
-    private static File utenti = new File("Utenti.xml");
+    private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+    private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     private static DBConnection dbc;
   
     public static void main(String[] args){
@@ -28,8 +28,8 @@ public class Server {
             System.out.println("...conversione database in xml...");
             dbc = new DBConnection();
             dbc.ConversioneDBtoXML();
-            System.out.println("...in attesa di connessioni...");
             while(true){
+                System.out.println("...in attesa di connessioni...");
                 Socket client = server.accept();
                 System.out.println("...connessione "+client.getLocalAddress()+" effettuata...");
                 ServerThread clientThread = new ServerThread(client,news, utenti);
