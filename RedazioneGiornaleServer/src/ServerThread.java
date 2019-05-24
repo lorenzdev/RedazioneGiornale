@@ -55,8 +55,8 @@ public class ServerThread extends Thread{
             Node utente = listUtenti.item(i);
             if(utente.getNodeType() == Node.ELEMENT_NODE){
                 Element el = (Element)utente;
-                System.out.println(el.getElementsByTagName("email").toString()+" "+email+" "+el.getElementsByTagName("password").toString()+" "+password+"\n");
-                if(el.getElementsByTagName("email").toString().equals(email) && el.getElementsByTagName("password").toString().equals(password))
+                System.out.println(el.getElementsByTagName("email").item(0).getTextContent()+" "+email+" "+el.getElementsByTagName("password").item(0).getTextContent()+" "+password+"\n");
+                if(el.getElementsByTagName("email").item(0).getTextContent().equals(email) && el.getElementsByTagName("password").item(0).getTextContent().equals(password))
                     login = true;
             }
         }
@@ -83,6 +83,8 @@ public class ServerThread extends Thread{
                 String password = in.readLine();//
                 System.out.println("[ password: "+password+" ]");
                 ControlloCredenziali(email,password);
+            }else if(scelta.equals("B")){
+                //inserimento da fare per registrazione
             }
             System.out.println("...in attesa di ordini dal client loggato...");
             scelta = in.readLine();
