@@ -53,6 +53,22 @@ public static void main(String[] args){
                 scelta = scanner.nextLine();
                 out.println(scelta);
                 
+                //se sono richieste le news
+                if(scelta.equals("A")){
+                    System.out.println("inserisci il topic delle news che vuoi visualizzare");
+                    scelta = scanner.nextLine();
+                    out.println(scelta);
+                    //attendo che il server mandi le news
+                    while(mem!="end"){   
+                    System.out.println(mem);
+                    mem=in.readLine(); 
+                    }
+                }
+                /*else{
+                    
+                    
+                }*/
+                
                 mem=in.readLine();
                 System.out.println(mem);
                 
