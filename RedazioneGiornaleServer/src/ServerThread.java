@@ -27,9 +27,11 @@ public class ServerThread extends Thread{
     private static Document docUtenti;
     private static Node rootUtenti;
     private static NodeList listUtenti;
+    private static DBConnection dbc;
     
-    public ServerThread(Socket client,File news,File utenti){
+    public ServerThread(Socket client,File news,File utenti, DBConnection dbc){
         this.client = client;
+        this.dbc = dbc;
         try{
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -89,6 +91,12 @@ public class ServerThread extends Thread{
         out.println("end");
     }
     
+    public static void RegistrazioneCredenziali(String email,String password,String nome,String cognome,String telefono,String data_nascita,String indirizzo_residenza,String citta_residenza){
+        dbc.InserisciUtenteXML(email, password, nome, cognome, telefono, data_nascita, indirizzo_residenza, citta_residenza);
+        System.out.println("...utente registrato...");
+        out.println("Registrazione effettuata correttamente");
+    }
+    
     @Override
     public void run(){
         try{
@@ -104,7 +112,24 @@ public class ServerThread extends Thread{
                 System.out.println("    [ password: "+password+" ]");
                 ControlloCredenziali(email,password);
             }else if(scelta.equals("B")){
-                //inserimento da fare per registrazione
+                System.out.println("...in attesa dei dati di registrazione...");
+                String email = in.readLine();//
+                System.out.println("    [ email: "+email+" ]");
+                String password = in.readLine();//
+                System.out.println("    [ password: "+password+" ]");
+                String nome = in.readLine();//
+                System.out.println("    [ nome: "+nome+" ]");
+                String cognome = in.readLine();//
+                System.out.println("    [ cognome: "+cognome+" ]");
+                String telefono = in.readLine();//
+                System.out.println("    [ telefono: "+telefono+" ]");
+                String data_nascita = in.readLine();//
+                System.out.println("    [ data di nascita: "+data_nascita+" ]");
+                String indirizzo_residenza = in.readLine();//
+                System.out.println("    [ indirizzo_residenza: "+indirizzo_residenza+" ]");
+                String citta_residenza = in.readLine();//
+                System.out.println("    [ città di residenza: "+citta_residenza+" ]");
+                RegistrazioneCredenziali(email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza);
             }
             System.out.println("...in attesa di ordini dal client loggato...");
             scelta = in.readLine();

@@ -50,7 +50,7 @@ public class DBConnection {
         }
     }
     
-    public static void inserisciUtente(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
+    public static void InserisciUtenteDB(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
         try{
             String query = "INSERT INTO Utenti (email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza)VALUES"
                     + "('"+email+"','"+password+"','"+nome+"','"+cognome+"','"+telefono+"','"+data_nascita+"','"+indirizzo_residenza+"','"+citta_residenza+"')";
@@ -61,7 +61,11 @@ public class DBConnection {
         }
     }
     
-    public static void inserisciNews(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
+    public static void InserisciUtenteXML(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
+    
+    }
+    
+    public static void InserisciNewsDB(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
         try{
             String query = "INSERT INTO News (topic,titolo,descrizione,contenuto,data,email_autore)VALUES"
                     + "('"+topic+"','"+titolo+"','"+descrizione+"','"+contenuto+"','"+data+"','"+email_autore+"')";
@@ -70,6 +74,10 @@ public class DBConnection {
         }catch(SQLException sql_e){
             sql_e.printStackTrace();
         }
+    }
+    
+    public static void InserisciNewsXML(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
+    
     }
     
     public static void ConversioneDBtoXML(){

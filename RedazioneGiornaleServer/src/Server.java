@@ -32,7 +32,7 @@ public class Server {
                 System.out.println("...in attesa di connessioni...");
                 Socket client = server.accept();
                 System.out.println("...connessione "+client.getLocalAddress()+" effettuata...");
-                ServerThread clientThread = new ServerThread(client,news, utenti);
+                ServerThread clientThread = new ServerThread(client,news, utenti,dbc);
                 clientThread.run();
             }
         }catch(Exception ex){
