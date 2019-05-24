@@ -55,7 +55,6 @@ public class ServerThread extends Thread{
             Node utente = listUtenti.item(i);
             if(utente.getNodeType() == Node.ELEMENT_NODE){
                 Element el = (Element)utente;
-                System.out.println(el.getElementsByTagName("email").item(0).getTextContent()+" "+email+" "+el.getElementsByTagName("password").item(0).getTextContent()+" "+password+"\n");
                 if(el.getElementsByTagName("email").item(0).getTextContent().equals(email) && el.getElementsByTagName("password").item(0).getTextContent().equals(password))
                     login = true;
             }
@@ -69,6 +68,27 @@ public class ServerThread extends Thread{
         }
     }
     
+    private static void RichiestaNews(String topic){
+        //INVIO NEWS DI UN CERTO TOPIC
+        boolean trovate = false;
+        for(int i=0;i<listNews.getLength();i++){
+            Node news = listNews.item(i);
+            if(news.getNodeType() == Node.ELEMENT_NODE){
+                Element el = (Element)news;
+                if(el.getElementsByTagName("topic").item(0).getTextContent().equals(topic)){
+                    System.out.println("qui");
+                    trovate = true;
+                    out.println(" titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n data:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent());
+                } 
+            }
+        }
+        if(!trovate){
+            System.out.println("    ...nessuna news trovata...");
+            out.println("nessuna news trovata");
+        }
+        out.println("end");
+    }
+    
     @Override
     public void run(){
         try{
@@ -79,9 +99,9 @@ public class ServerThread extends Thread{
             if(scelta.equals("A")){
                 System.out.println("...in attesa delle credenziali...");
                 String email = in.readLine();//
-                System.out.println("[ email: "+email+" ]");
+                System.out.println("    [ email: "+email+" ]");
                 String password = in.readLine();//
-                System.out.println("[ password: "+password+" ]");
+                System.out.println("    [ password: "+password+" ]");
                 ControlloCredenziali(email,password);
             }else if(scelta.equals("B")){
                 //inserimento da fare per registrazione
@@ -89,7 +109,10 @@ public class ServerThread extends Thread{
             System.out.println("...in attesa di ordini dal client loggato...");
             scelta = in.readLine();
             if(scelta.equals("A")){
-                System.out.println("Hai richiesto news...");
+                System.out.println("...richiesta delle news...\n    ...in attesa del topic...");
+                String topic = in.readLine();
+                System.out.println("    [ topic: "+topic+" ]");
+                RichiestaNews(topic);
             }
             if(scelta.equals("B")){
                 System.out.println("Vuoi inserire news...");
