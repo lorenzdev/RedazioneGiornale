@@ -67,6 +67,47 @@ public static void main(String[] args){
                 }
                 client.close();
             }
+            else{
+                System.out.println("inserisci l'email che vuoi utlizzare");
+                String email = scanner.nextLine();
+                out.println(email);
+                
+                System.out.println("inserisci la password che vuoi utilizzare");
+                String password = scanner.nextLine();
+                out.println(password);
+                
+                System.out.println("inserisci il tuo nome");
+                String nome = scanner.nextLine();
+                out.println(nome);
+                
+                System.out.println("inserisci il tuo cognome");
+                String cognome = scanner.nextLine();
+                out.println(cognome);
+                
+                System.out.println("inserisci il tuo telefono");
+                String telefono = scanner.nextLine();
+                out.println(telefono);
+                
+                System.out.println("inserisci l'anno di nascita");
+                String anno = scanner.nextLine();
+                out.println(anno);
+                
+                System.out.println("inserisci il mese di nascita");
+                String mese = scanner.nextLine();
+                out.println(mese);
+                
+                System.out.println("inserisci il giorno di nascita");
+                String giorno = scanner.nextLine();
+                out.println(giorno);
+                
+                System.out.println("inserisci l'indirizzo di residenza");
+                String indirizzo_residenza = scanner.nextLine();
+                out.println(indirizzo_residenza);
+                
+                System.out.println("inserisci la citta' di residenza");
+                String citta_residenza = scanner.nextLine();
+                out.println(citta_residenza);
+            }
         }catch(Exception ex){
             ex.printStackTrace();
         }
