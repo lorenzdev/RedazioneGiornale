@@ -65,7 +65,18 @@ public static void main(String[] args){
                         mem=in.readLine();
                     }
                 }
-                client.close();
+                //inserimento di una news
+                else{
+                    System.out.println("inserisci il topic della news");
+                    String topic= scanner.nextLine();
+                    out.println(topic);
+                    
+                    System.out.println("inserisci il titolo della news");
+                    String titolo= scanner.nextLine();
+                    out.println(titolo);
+                    
+                }
+                
             }
             else{
                 System.out.println("inserisci l'email che vuoi utlizzare");
@@ -108,6 +119,7 @@ public static void main(String[] args){
                 String citta_residenza = scanner.nextLine();
                 out.println(citta_residenza);
             }
+            client.close();
         }catch(Exception ex){
             ex.printStackTrace();
         }
