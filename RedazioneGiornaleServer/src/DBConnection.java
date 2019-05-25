@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.io.File;
+import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,9 +20,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.*;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.*;
 
 /**
  *
@@ -49,7 +52,7 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
-    
+    //da fare
     public static void InserisciUtenteDB(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
         try{
             String query = "INSERT INTO Utenti (email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza)VALUES"
@@ -62,9 +65,52 @@ public class DBConnection {
     }
     
     public static void InserisciUtenteXML(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
-    
+        try{
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setValidating(false);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(new FileInputStream(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml")));
+
+            Element element = doc.getDocumentElement();
+            Node Utente = doc.createElement("Utente");
+            element.appendChild(Utente);
+
+            Element Email = doc.createElement("email");
+            Email.appendChild(doc.createTextNode(email));
+            Utente.appendChild(Email);
+            Element Password = doc.createElement("password");
+            Password.appendChild(doc.createTextNode(password));
+            Utente.appendChild(Password);
+            Element Nome = doc.createElement("nome");
+            Nome.appendChild(doc.createTextNode(nome));
+            Utente.appendChild(Nome);
+            Element Cognome = doc.createElement("cognome");
+            Cognome.appendChild(doc.createTextNode(cognome));
+            Utente.appendChild(Cognome);
+            Element Telefono = doc.createElement("telefono");
+            Telefono.appendChild(doc.createTextNode(telefono));
+            Utente.appendChild(Telefono);
+            Element Data_nascita = doc.createElement("data_nascita");
+            Data_nascita.appendChild(doc.createTextNode(data_nascita));
+            Utente.appendChild(Data_nascita);
+            Element Indirizzo_residenza = doc.createElement("indirizzo_residenza");
+            Indirizzo_residenza.appendChild(doc.createTextNode(indirizzo_residenza));
+            Utente.appendChild(Indirizzo_residenza);
+            Element Citta_residenza = doc.createElement("citta_residenza");
+            Citta_residenza.appendChild(doc.createTextNode(citta_residenza));
+            Utente.appendChild(Citta_residenza);
+            
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml"));
+            transformer.transform(source, result);
+        }catch(Exception e){
+            e.printStackTrace();
+        }   
     }
-    
+    //da fare
     public static void InserisciNewsDB(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
         try{
             String query = "INSERT INTO News (topic,titolo,descrizione,contenuto,data,email_autore)VALUES"
@@ -77,7 +123,44 @@ public class DBConnection {
     }
     
     public static void InserisciNewsXML(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
-    
+            try{
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                dbf.setValidating(false);
+                DocumentBuilder db = dbf.newDocumentBuilder();
+
+                Document doc = db.parse(new FileInputStream(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml")));
+
+                Element element = doc.getDocumentElement();
+                Node News = doc.createElement("News");
+                element.appendChild(News);
+
+                Element Topic = doc.createElement("topic");
+                Topic.appendChild(doc.createTextNode(topic));
+                News.appendChild(Topic);
+                Element Titolo = doc.createElement("titolo");
+                Titolo.appendChild(doc.createTextNode(titolo));
+                News.appendChild(Titolo);
+                Element Descrizione = doc.createElement("descrizione");
+                Descrizione.appendChild(doc.createTextNode(descrizione));
+                News.appendChild(Descrizione);
+                Element Contenuto = doc.createElement("contenuto");
+                Contenuto.appendChild(doc.createTextNode(contenuto));
+                News.appendChild(Contenuto);
+                Element Data = doc.createElement("data");
+                Data.appendChild(doc.createTextNode(data));
+                News.appendChild(Data);
+                Element Email_autore = doc.createElement("email_autore");
+                Email_autore.appendChild(doc.createTextNode(email_autore));
+                News.appendChild(Email_autore);
+
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml"));
+                transformer.transform(source, result);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
     }
     
     public static void ConversioneDBtoXML(){
