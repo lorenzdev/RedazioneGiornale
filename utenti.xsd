@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema 
+ xmlns:xs="http://www.w3.org/2001/XMLSchema">
+ <xs:element name="Utenti">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="Utente">
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="email" type="xs:string"/>
+       <xs:element name="password" type="xs:string"/>
+       <xs:element name="nome" type="xs:string"/>
+       <xs:element name="cognome" type="xs:string"/>
+	   <xs:element name="telefono" type="xs:integer"/>
+       <xs:element name="data_nascita" type="xs:date"/>
+       <xs:element name="indirizzo_residenza" type="xs:string"/>
+	   <xs:element name="citta_residenza" type="xs:string"/>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+</xs:schema>
