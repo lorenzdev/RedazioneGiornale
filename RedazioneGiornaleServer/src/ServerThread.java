@@ -28,19 +28,25 @@ public class ServerThread extends Thread{
     private static Node rootUtenti;
     private static NodeList listUtenti;
     private static DBConnection dbc;
+    private static boolean login;
+    private static File FileUtenti;
+    private static File FileNews;
     
     public ServerThread(Socket client,File news,File utenti, DBConnection dbc){
+        this.FileUtenti = utenti;
+        this.FileNews = news;
         this.client = client;
         this.dbc = dbc;
+        this.login = false;
         try{
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
             
-            docUtenti = dBuilder.parse(utenti);
+            docUtenti = dBuilder.parse(this.FileUtenti);
             rootUtenti = docUtenti.getFirstChild();
             listUtenti = ((Element)rootUtenti).getElementsByTagName("Utente");
             
-            docNews = dBuilder.parse(news);
+            docNews = dBuilder.parse(this.FileNews);
             rootNews = docNews.getFirstChild();
             listNews = ((Element)rootNews).getElementsByTagName("News"); 
         }catch(Exception ex){
@@ -48,11 +54,29 @@ public class ServerThread extends Thread{
             ex.printStackTrace();
         }
     }
+    private static void AggiornaFileUtentiUtilizzato(){
+        try{
+            docUtenti = dBuilder.parse(ServerThread.FileUtenti);
+            rootUtenti = docUtenti.getFirstChild();
+            listUtenti = ((Element)rootUtenti).getElementsByTagName("Utente");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private static void AggiornaFileNewsUtilizzato(){
+        try{
+            docNews = dBuilder.parse(ServerThread.FileNews);
+            rootNews = docNews.getFirstChild();
+            listNews = ((Element)rootNews).getElementsByTagName("News"); 
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     
     private static void ControlloCredenziali(String email, String password){
         System.out.println("...controllo delle credenziali...");
         //CONTROLLO DELLE CREDENZIALI
-        boolean login = false;
         for(int i=0; i<listUtenti.getLength();i++){
             Node utente = listUtenti.item(i);
             if(utente.getNodeType() == Node.ELEMENT_NODE){
@@ -62,11 +86,11 @@ public class ServerThread extends Thread{
             }
         }
         if(login){
-            out.println("login avvenuto con successo");
-            System.out.println("login avvenuto con successo");
+            out.println("Login avvenuto con successo");
+            System.out.println("...login avvenuto con successo...");
         }else{
-            out.println("nome utente o password non validi");
-            System.out.println("nome utente o password non validi");
+            out.println("Nome utente o password non validi");
+            System.out.println("...nome utente o password non validi...");
         }
     }
     
@@ -78,15 +102,14 @@ public class ServerThread extends Thread{
             if(news.getNodeType() == Node.ELEMENT_NODE){
                 Element el = (Element)news;
                 if(el.getElementsByTagName("topic").item(0).getTextContent().equals(topic)){
-                    System.out.println("qui");
                     trovate = true;
-                    out.println(" titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n data:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent());
+                    out.println("\n\n titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent()+"\n data pubblicazione:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n email autore:    "+el.getElementsByTagName("email_autore").item(0).getTextContent()+"\n\n");
                 } 
             }
         }
         if(!trovate){
             System.out.println("    ...nessuna news trovata...");
-            out.println("nessuna news trovata");
+            out.println("Nessuna news trovata");
         }
         out.println("end");
     }
@@ -97,58 +120,88 @@ public class ServerThread extends Thread{
         out.println("Registrazione effettuata correttamente");
     }
     
+    public static void SalvataggioNews(String topic,String titolo,String descrizione,String contenuto,String data,String email_autore){
+        dbc.InserisciNewsXML(topic, titolo, descrizione, contenuto, data, email_autore);
+        System.out.println("...news salvata...");
+        out.println("Salvataggio news effettuato correttamente");
+    }
+    
     @Override
     public void run(){
         try{
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())),true);
-            System.out.println("...in attesa di ordini dal client...");
-            String scelta = in.readLine();
-            if(scelta.equals("A")){
-                System.out.println("...in attesa delle credenziali...");
-                String email = in.readLine();//
-                System.out.println("    [ email: "+email+" ]");
-                String password = in.readLine();//
-                System.out.println("    [ password: "+password+" ]");
-                ControlloCredenziali(email,password);
-            }else if(scelta.equals("B")){
-                System.out.println("...in attesa dei dati di registrazione...");
-                String email = in.readLine();//
-                System.out.println("    [ email: "+email+" ]");
-                String password = in.readLine();//
-                System.out.println("    [ password: "+password+" ]");
-                String nome = in.readLine();//
-                System.out.println("    [ nome: "+nome+" ]");
-                String cognome = in.readLine();//
-                System.out.println("    [ cognome: "+cognome+" ]");
-                String telefono = in.readLine();//
-                System.out.println("    [ telefono: "+telefono+" ]");
-                String data_nascita = in.readLine();//
-                System.out.println("    [ data di nascita: "+data_nascita+" ]");
-                String indirizzo_residenza = in.readLine();//
-                System.out.println("    [ indirizzo_residenza: "+indirizzo_residenza+" ]");
-                String citta_residenza = in.readLine();//
-                System.out.println("    [ città di residenza: "+citta_residenza+" ]");
-                RegistrazioneCredenziali(email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza);
+            while(true){
+                System.out.println("...in attesa di ordini dal client...");
+                String scelta = in.readLine();
+                if(scelta.equals("A")){
+                    System.out.println("...in attesa delle credenziali...");
+                    String email = in.readLine();//
+                    System.out.println("    [ email: "+email+" ]");
+                    String password = in.readLine();//
+                    System.out.println("    [ password: "+password+" ]");
+                    ControlloCredenziali(email,password);
+                    if(login){
+                        while(true){
+                            System.out.println("...in attesa di ordini dal client loggato...");
+                            scelta = in.readLine();
+                            if(scelta.equals("A")){
+                                System.out.println("...richiesta delle news...\n    ...in attesa del topic...");
+                                String topic = in.readLine();
+                                System.out.println("    [ topic: "+topic+" ]");
+                                RichiestaNews(topic);
+                            } else if(scelta.equals("B")){
+                                System.out.println("...in attesa dei dati della news da aggiungere...");
+                                String topic = in.readLine();
+                                System.out.println("    [ topic: "+topic+" ]");
+                                String titolo = in.readLine();
+                                System.out.println("    [ titolo: "+titolo+" ]");
+                                String descrizione = in.readLine();
+                                System.out.println("    [ descrizione: "+descrizione+" ]");
+                                String contenuto = in.readLine();
+                                System.out.println("    [ contenuto: "+contenuto+" ]");
+                                String data = in.readLine();
+                                System.out.println("    [ data: "+data+" ]");
+                                String email_autore = in.readLine();
+                                System.out.println("    [ email autore: "+email_autore+" ]");
+                                SalvataggioNews(topic,titolo,descrizione,contenuto,data,email_autore);
+                                AggiornaFileNewsUtilizzato();
+                            } else if(scelta.equals("C")){
+                                login = false;
+                                break;
+                            }
+                        }
+                    }
+                }else if(scelta.equals("B")){
+                    System.out.println("...in attesa dei dati di registrazione...");
+                    String email = in.readLine();//
+                    System.out.println("    [ email: "+email+" ]");
+                    String password = in.readLine();//
+                    System.out.println("    [ password: "+password+" ]");
+                    String nome = in.readLine();//
+                    System.out.println("    [ nome: "+nome+" ]");
+                    String cognome = in.readLine();//
+                    System.out.println("    [ cognome: "+cognome+" ]");
+                    String telefono = in.readLine();//
+                    System.out.println("    [ telefono: "+telefono+" ]");
+                    String data_nascita = in.readLine();//
+                    System.out.println("    [ data di nascita: "+data_nascita+" ]");
+                    String indirizzo_residenza = in.readLine();//
+                    System.out.println("    [ indirizzo_residenza: "+indirizzo_residenza+" ]");
+                    String citta_residenza = in.readLine();//
+                    System.out.println("    [ città di residenza: "+citta_residenza+" ]");
+                    RegistrazioneCredenziali(email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza);
+                    AggiornaFileUtentiUtilizzato();
+                }else if(scelta.equals("C")){
+                    System.out.println("...chiusura connessione "+client.getLocalAddress()+" ...");
+                    client.close();
+                    break;
+                }
             }
-            System.out.println("...in attesa di ordini dal client loggato...");
-            scelta = in.readLine();
-            if(scelta.equals("A")){
-                System.out.println("...richiesta delle news...\n    ...in attesa del topic...");
-                String topic = in.readLine();
-                System.out.println("    [ topic: "+topic+" ]");
-                RichiestaNews(topic);
-            }
-            if(scelta.equals("B")){
-                System.out.println("Vuoi inserire news...");
-            }
-            out.println("end");
-            System.out.println("...chiusura connessione "+client.getLocalAddress()+" ...");
-            client.close();
-            in.close();
-            out.close();
         }catch(Exception ex){
             ex.printStackTrace();
+        }finally{
+            dbc.ConversioneXMLtoDB();
         }
     }
     

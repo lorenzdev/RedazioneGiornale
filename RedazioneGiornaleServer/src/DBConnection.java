@@ -38,10 +38,37 @@ public class DBConnection {
     static final String DB_PASSWD = "";
     static Connection connection = null;
     static Statement statement = null;
-    static ResultSet resultSet = null; 
+    static ResultSet resultSet = null;
+    private static DocumentBuilderFactory dbFactory;
+    private static DocumentBuilder dBuilder;
+    private static Document docNews;
+    private static Node rootNews;
+    private static NodeList listNews;
+    private static Document docUtenti;
+    private static Node rootUtenti;
+    private static NodeList listUtenti;
+    private static DBConnection dbc;
+    private static boolean login;
+    private static File FileUtenti;
+    private static File FileNews;
     
     public DBConnection(){
         try{
+            //private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            //private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+    
+            dbFactory = DocumentBuilderFactory.newInstance();
+            dBuilder = dbFactory.newDocumentBuilder();
+            
+            docUtenti = dBuilder.parse(FileUtenti);
+            rootUtenti = docUtenti.getFirstChild();
+            listUtenti = ((Element)rootUtenti).getElementsByTagName("Utente");
+            
+            docNews = dBuilder.parse(FileNews);
+            rootNews = docNews.getFirstChild();
+            listNews = ((Element)rootNews).getElementsByTagName("News");
             // CREO LA CONNESSIONE AL DATABASE
             Class.forName(DB_DRV);
             connection=DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWD);
@@ -70,8 +97,8 @@ public class DBConnection {
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-            Document doc = db.parse(new FileInputStream(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml")));
-
+            Document doc = db.parse(new FileInputStream(FileUtenti));
+            
             Element element = doc.getDocumentElement();
             Node Utente = doc.createElement("Utente");
             element.appendChild(Utente);
@@ -100,11 +127,14 @@ public class DBConnection {
             Element Citta_residenza = doc.createElement("citta_residenza");
             Citta_residenza.appendChild(doc.createTextNode(citta_residenza));
             Utente.appendChild(Citta_residenza);
+            Element stato_modifica = doc.createElement("stato_modifica");
+            stato_modifica.appendChild(doc.createTextNode("1"));
+            Utente.appendChild(stato_modifica);
             
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml"));
+            StreamResult result = new StreamResult(FileUtenti);
             transformer.transform(source, result);
         }catch(Exception e){
             e.printStackTrace();
@@ -128,7 +158,7 @@ public class DBConnection {
                 dbf.setValidating(false);
                 DocumentBuilder db = dbf.newDocumentBuilder();
 
-                Document doc = db.parse(new FileInputStream(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml")));
+                Document doc = db.parse(new FileInputStream(FileNews));
 
                 Element element = doc.getDocumentElement();
                 Node News = doc.createElement("News");
@@ -152,11 +182,14 @@ public class DBConnection {
                 Element Email_autore = doc.createElement("email_autore");
                 Email_autore.appendChild(doc.createTextNode(email_autore));
                 News.appendChild(Email_autore);
+                Element stato_modifica = doc.createElement("stato_modifica");
+                stato_modifica.appendChild(doc.createTextNode("1"));
+                News.appendChild(stato_modifica);
 
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml"));
+                StreamResult result = new StreamResult(FileNews);
                 transformer.transform(source, result);
             }catch(Exception e){
                 e.printStackTrace();
@@ -202,12 +235,15 @@ public class DBConnection {
                 Element Citta_residenza = doc.createElement("citta_residenza");
                 Citta_residenza.appendChild(doc.createTextNode(valori.getString("citta_residenza")));
                 Utente.appendChild(Citta_residenza);
+                Element stato_modifica = doc.createElement("stato_modifica");
+                stato_modifica.appendChild(doc.createTextNode("0"));
+                Utente.appendChild(stato_modifica);
             }
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml"));
+            StreamResult result = new StreamResult(FileUtenti);
             transformer.transform(source, result);
             System.out.println("    ...conversione file News.xml...");
             // root elements
@@ -238,12 +274,15 @@ public class DBConnection {
                 Element Email_autore = doc.createElement("email_autore");
                 Email_autore.appendChild(doc.createTextNode(valori.getString("email_autore")));
                 News.appendChild(Email_autore);
+                Element stato_modifica = doc.createElement("stato_modifica");
+                stato_modifica.appendChild(doc.createTextNode("0"));
+                News.appendChild(stato_modifica);
             }
             // write the content into xml file
             transformerFactory = TransformerFactory.newInstance();
             transformer = transformerFactory.newTransformer();
             source = new DOMSource(doc);
-            result = new StreamResult(new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml"));
+            result = new StreamResult(FileNews);
             transformer.transform(source, result);
       } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -255,36 +294,62 @@ public class DBConnection {
     }
     
     public static void ConversioneXMLtoDB(){
-        
-    }
-    /*public static void updateRow(){
-        
-        String email = "maurizio.buoni@gmail.com";
-
         try{
-            
-            String query = "UPDATE utenti SET indirizzo = 'via Pasolini, 5' WHERE email = '"+email+"'";
-            PreparedStatement ins = connection.prepareStatement(query);
-            ins.executeUpdate();
-            
-        }catch(SQLException sql_e){
-            sql_e.printStackTrace();
+            System.out.println("...caricamento dei nuovi dati dell'xml nel database...");
+            for(int i=0;i<listUtenti.getLength();i++){
+                Node utenti = listUtenti.item(i);
+                if(utenti.getNodeType() == Node.ELEMENT_NODE){
+                    Element el = (Element)utenti;
+                    if(el.getElementsByTagName("stato_modifica").item(0).getTextContent().equals("1")){
+                        String email = el.getElementsByTagName("email").item(0).getTextContent();
+                        String password = el.getElementsByTagName("password").item(0).getTextContent();
+                        String nome = el.getElementsByTagName("nome").item(0).getTextContent();
+                        String cognome = el.getElementsByTagName("cognome").item(0).getTextContent();
+                        String telefono = el.getElementsByTagName("telefono").item(0).getTextContent();
+                        String data_nascita = el.getElementsByTagName("data_nascita").item(0).getTextContent();
+                        String indirizzo_residenza = el.getElementsByTagName("indirizzo_residenza").item(0).getTextContent();
+                        String citta_residenza = el.getElementsByTagName("citta_residenza").item(0).getTextContent();
+                        String query_insert_Utente = "INSERT INTO Utenti (email, password, nome, cognome, telefono, data_nascita, indirizzo_residenza, citta_residenza) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        PreparedStatement preparedStmt = connection.prepareStatement(query_insert_Utente);
+                        preparedStmt.setString(1, email);
+                        preparedStmt.setString(2, password);
+                        preparedStmt.setString(3, nome);
+                        preparedStmt.setString(4, cognome);
+                        preparedStmt.setString(5, telefono);
+                        preparedStmt.setString(6, data_nascita);
+                        preparedStmt.setString(7, indirizzo_residenza);
+                        preparedStmt.setString(8, citta_residenza);
+                        System.out.println("    ...inserimento nuovo utente: "+email+"...");
+                        preparedStmt.executeUpdate();
+                    }
+                }
+            }
+            for(int i=0;i<listNews.getLength();i++){
+                Node news = listNews.item(i);
+                if(news.getNodeType() == Node.ELEMENT_NODE){
+                    Element el = (Element)news;
+                    if(el.getElementsByTagName("stato_modifica").item(0).getTextContent().equals("1")){
+                        String topic = el.getElementsByTagName("topic").item(0).getTextContent();
+                        String titolo = el.getElementsByTagName("titolo").item(0).getTextContent();
+                        String descrizione = el.getElementsByTagName("descrizione").item(0).getTextContent();
+                        String contenuto = el.getElementsByTagName("contenuto").item(0).getTextContent();
+                        String data = el.getElementsByTagName("data").item(0).getTextContent();
+                        String email_autore = el.getElementsByTagName("email_autore").item(0).getTextContent();
+                        String query_insert_News = "INSERT INTO News (topic, titolo, descrizione, contenuto, data, email_autore) VALUES (?, ?, ?, ?, ?, ?)";
+                        PreparedStatement preparedStmt = connection.prepareStatement(query_insert_News);
+                        preparedStmt.setString(1, topic);
+                        preparedStmt.setString(2, titolo);
+                        preparedStmt.setString(3, descrizione);
+                        preparedStmt.setString(4, contenuto);
+                        preparedStmt.setString(5, data);
+                        preparedStmt.setString(6, email_autore);
+                        System.out.println("    ...inserimento nuova news: "+titolo+"...");
+                        preparedStmt.executeUpdate();
+                    }
+                }
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-    }
-    
-    public static void deleteRow(){
-        
-        String email = "maurizio.buoni@gmail.com";
-
-        try{
-            
-            String query = "DELETE FROM utenti WHERE email = '"+email+"'";
-            PreparedStatement ins = connection.prepareStatement(query);
-            ins.executeUpdate();
-            
-        }catch(SQLException sql_e){
-            sql_e.printStackTrace();
-        }
-    }*/
-        
+    }  
 }
