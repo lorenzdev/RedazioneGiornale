@@ -94,19 +94,44 @@ public class ServerThread extends Thread{
         }
     }
     
-    private static void RichiestaNews(String topic){
-        //INVIO NEWS DI UN CERTO TOPIC
+    private static void RichiestaNews(String tipo, String value){
         boolean trovate = false;
-        for(int i=0;i<listNews.getLength();i++){
-            Node news = listNews.item(i);
-            if(news.getNodeType() == Node.ELEMENT_NODE){
-                Element el = (Element)news;
-                if(el.getElementsByTagName("topic").item(0).getTextContent().equals(topic)){
-                    trovate = true;
-                    out.println("\n\n titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent()+"\n data pubblicazione:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n email autore:    "+el.getElementsByTagName("email_autore").item(0).getTextContent()+"\n\n");
-                } 
+        if(tipo.equals("A")){
+            for(int i=(listNews.getLength()-1);i>=0;i--){
+                Node news = listNews.item(i);
+                if(news.getNodeType() == Node.ELEMENT_NODE){
+                    Element el = (Element)news;
+                    if(el.getElementsByTagName("topic").item(0).getTextContent().equals(value)){
+                        trovate = true;
+                        out.println("\n\n titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent()+"\n data pubblicazione:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n email autore:    "+el.getElementsByTagName("email_autore").item(0).getTextContent()+"\n\n");
+                    } 
+                }
+            }
+        }else if(tipo.equals("B")){
+            for(int i=(listNews.getLength()-1);i>=0;i--){
+                Node news = listNews.item(i);
+                if(news.getNodeType() == Node.ELEMENT_NODE){
+                    Element el = (Element)news;
+                    String mese = el.getElementsByTagName("data").item(0).getTextContent().split("-")[1];
+                    if(mese.equals(value)){
+                        trovate = true;
+                        out.println("\n\n titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent()+"\n data pubblicazione:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n email autore:    "+el.getElementsByTagName("email_autore").item(0).getTextContent()+"\n\n");
+                    } 
+                }
+            }
+        }else if(tipo.equals("C")){
+            for(int i=(listNews.getLength()-1);i>=0;i--){
+                Node news = listNews.item(i);
+                if(news.getNodeType() == Node.ELEMENT_NODE){
+                    Element el = (Element)news;
+                    if(el.getElementsByTagName("email_autore").item(0).getTextContent().equals(value)){
+                        trovate = true;
+                        out.println("\n\n titolo:    "+el.getElementsByTagName("titolo").item(0).getTextContent()+"\n descrizione:    "+el.getElementsByTagName("descrizione").item(0).getTextContent()+"\n contenuto:    "+el.getElementsByTagName("contenuto").item(0).getTextContent()+"\n data pubblicazione:    "+el.getElementsByTagName("data").item(0).getTextContent()+"\n email autore:    "+el.getElementsByTagName("email_autore").item(0).getTextContent()+"\n\n");
+                    } 
+                }
             }
         }
+        
         if(!trovate){
             System.out.println("    ...nessuna news trovata...");
             out.println("Nessuna news trovata");
@@ -147,10 +172,22 @@ public class ServerThread extends Thread{
                             System.out.println("...in attesa di ordini dal client loggato...");
                             scelta = in.readLine();
                             if(scelta.equals("A")){
-                                System.out.println("...richiesta delle news...\n    ...in attesa del topic...");
-                                String topic = in.readLine();
-                                System.out.println("    [ topic: "+topic+" ]");
-                                RichiestaNews(topic);
+                                System.out.println("...richiesta delle news...\n    ...in attesa del tipo di richiesta...");
+                                String tipo = in.readLine();
+                                System.out.println("    [ tipo ricerca: "+tipo+" ]");
+                                if(tipo.equals("A")){
+                                    String topic = in.readLine();
+                                    System.out.println("    [ topic: "+topic+" ]");
+                                    RichiestaNews(tipo,topic);
+                                }else if(tipo.equals("B")){
+                                    String mese = in.readLine();
+                                    System.out.println("    [ mese: "+mese+" ]");
+                                    RichiestaNews(tipo,mese);
+                                }else if(tipo.equals("C")){
+                                    String email_autore = in.readLine();
+                                    System.out.println("    [ email autore: "+email_autore+" ]");
+                                    RichiestaNews(tipo,email_autore);
+                                }
                             } else if(scelta.equals("B")){
                                 System.out.println("...in attesa dei dati della news da aggiungere...");
                                 String topic = in.readLine();
@@ -198,6 +235,8 @@ public class ServerThread extends Thread{
                     Server.diminuisciUtentiConnessi();
                     client.close();
                     break;
+                }else if(scelta.equals("D")){
+                    //
                 }
             }
         }catch(Exception ex){

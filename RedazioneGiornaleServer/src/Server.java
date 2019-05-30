@@ -17,10 +17,10 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class Server {
     private static int porta = 9999;
-    private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-    //private static File news = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-    private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
-    //private static File utenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+    //private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+    private static File news = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+    //private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+    private static File utenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     private static DBConnection dbc;
     private static int utenti_connessi = 0;
   
@@ -38,10 +38,11 @@ public class Server {
             ServerSocket server = new ServerSocket(porta);
             System.out.println("...conversione database in xml...");
             dbc = new DBConnection();
-            dbc.ConversioneDBtoXML();
             while(true){
-                if(utenti_connessi == 0)
+                if(utenti_connessi == 0){
                     dbc.ConversioneXMLtoDB();
+                    dbc.ConversioneDBtoXML();
+                }
                 System.out.println("    [utenti connessi: "+utenti_connessi+" ]");
                 System.out.println("...in attesa di connessioni...");
                 Socket client = server.accept();

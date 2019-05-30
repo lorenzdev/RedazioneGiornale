@@ -61,14 +61,39 @@ public static void main(String[] args){
 
                             //se sono richieste le news
                             if(scelta.equals("A")){
-                                System.out.println("inserisci il topic delle news che vuoi visualizzare");
+                                System.out.println(" A) Ricerca per topic\n B) Ricerca per intervallo \n C) Ricerca per email dell'autore");
                                 scelta = scanner.nextLine();
                                 out.println(scelta);
-                                mem=in.readLine();
-                                //attendo che il server mandi le news
-                                while(!mem.equals("end")){
-                                    System.out.println(mem);
+                                if(scelta.equals("A")){
+                                    System.out.println("inserisci il topic delle news che vuoi visualizzare");
+                                    scelta = scanner.nextLine();
+                                    out.println(scelta);
                                     mem=in.readLine();
+                                    //attendo che il server mandi le news
+                                    while(!mem.equals("end")){
+                                        System.out.println(mem);
+                                        mem=in.readLine();
+                                    }
+                                }else if(scelta.equals("B")){
+                                    System.out.println("inserisci il mese (numerico) dell'intervallo in cui vuoi cercare");
+                                    scelta = scanner.nextLine();
+                                    out.println(scelta);
+                                    mem=in.readLine();
+                                    //attendo che il server mandi le news
+                                    while(!mem.equals("end")){
+                                        System.out.println(mem);
+                                        mem=in.readLine();
+                                    }
+                                }else if(scelta.equals("C")){
+                                    System.out.println("inserisci l'email dell'autore di cui vuoi visualizzare i post");
+                                    scelta = scanner.nextLine();
+                                    out.println(scelta);
+                                    mem=in.readLine();
+                                    //attendo che il server mandi le news
+                                    while(!mem.equals("end")){
+                                        System.out.println(mem);
+                                        mem=in.readLine();
+                                    }
                                 }
                             }else if(scelta.equals("B")){
                                 System.out.println("inserisci il topic della news che vuoi inserire");

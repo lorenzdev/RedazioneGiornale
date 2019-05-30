@@ -52,12 +52,32 @@ public class DBConnection {
     private static File FileUtenti;
     private static File FileNews;
     
+    private static void AggiornaFileUtentiUtilizzato(){
+        try{
+            docUtenti = dBuilder.parse(DBConnection.FileUtenti);
+            rootUtenti = docUtenti.getFirstChild();
+            listUtenti = ((Element)rootUtenti).getElementsByTagName("Utente");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private static void AggiornaFileNewsUtilizzato(){
+        try{
+            docNews = dBuilder.parse(DBConnection.FileNews);
+            rootNews = docNews.getFirstChild();
+            listNews = ((Element)rootNews).getElementsByTagName("News"); 
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     public DBConnection(){
         try{
-            FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            //FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
-            //FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            //FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            //FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -82,6 +102,8 @@ public class DBConnection {
     
     public static void InserisciUtenteXML(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
         try{
+            AggiornaFileUtentiUtilizzato();
+            
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -132,6 +154,8 @@ public class DBConnection {
     
     public static void InserisciNewsXML(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
             try{
+                AggiornaFileNewsUtilizzato();
+                
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 dbf.setValidating(false);
                 DocumentBuilder db = dbf.newDocumentBuilder();
@@ -273,6 +297,9 @@ public class DBConnection {
     
     public static void ConversioneXMLtoDB(){
         try{
+            AggiornaFileNewsUtilizzato();
+            AggiornaFileUtentiUtilizzato();
+            
             System.out.println("...caricamento dei nuovi dati dell'xml nel database...");
             for(int i=0;i<listUtenti.getLength();i++){
                 Node utenti = listUtenti.item(i);
