@@ -129,6 +129,7 @@ public class ServerThread extends Thread{
     @Override
     public void run(){
         try{
+            Server.aumentaUtentiConnessi();
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())),true);
             while(true){
@@ -194,14 +195,13 @@ public class ServerThread extends Thread{
                     AggiornaFileUtentiUtilizzato();
                 }else if(scelta.equals("C")){
                     System.out.println("...chiusura connessione "+client.getLocalAddress()+" ...");
+                    Server.diminuisciUtentiConnessi();
                     client.close();
                     break;
                 }
             }
         }catch(Exception ex){
             ex.printStackTrace();
-        }finally{
-            dbc.ConversioneXMLtoDB();
         }
     }
     

@@ -54,10 +54,10 @@ public class DBConnection {
     
     public DBConnection(){
         try{
-            //private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            //private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
-            FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            //FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            //FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -77,17 +77,6 @@ public class DBConnection {
             sql_e.printStackTrace();
         }catch(Exception e){
             e.printStackTrace();
-        }
-    }
-    //da fare
-    public static void InserisciUtenteDB(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
-        try{
-            String query = "INSERT INTO Utenti (email,password,nome,cognome,telefono,data_nascita,indirizzo_residenza,citta_residenza)VALUES"
-                    + "('"+email+"','"+password+"','"+nome+"','"+cognome+"','"+telefono+"','"+data_nascita+"','"+indirizzo_residenza+"','"+citta_residenza+"')";
-            PreparedStatement ins = connection.prepareStatement(query);
-            ins.executeUpdate();
-        }catch(SQLException sql_e){
-            sql_e.printStackTrace();
         }
     }
     
@@ -139,17 +128,6 @@ public class DBConnection {
         }catch(Exception e){
             e.printStackTrace();
         }   
-    }
-    //da fare
-    public static void InserisciNewsDB(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
-        try{
-            String query = "INSERT INTO News (topic,titolo,descrizione,contenuto,data,email_autore)VALUES"
-                    + "('"+topic+"','"+titolo+"','"+descrizione+"','"+contenuto+"','"+data+"','"+email_autore+"')";
-            PreparedStatement ins = connection.prepareStatement(query);
-            ins.executeUpdate();
-        }catch(SQLException sql_e){
-            sql_e.printStackTrace();
-        }
     }
     
     public static void InserisciNewsXML(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){

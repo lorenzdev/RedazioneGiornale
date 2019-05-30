@@ -84,7 +84,7 @@ public static void main(String[] args){
                                 String contenuto = scanner.nextLine();
                                 out.println(contenuto);
                                 //invio la data attuale come data di creazione della news
-                                out.println(calendario.get(Calendar.YEAR)+"-"+calendario.get(Calendar.MONTH)+"-"+calendario.get(Calendar.DATE));
+                                out.println(calendario.get(Calendar.YEAR)+"-"+(calendario.get(Calendar.MONTH)+1)+"-"+calendario.get(Calendar.DATE));
                                 //invio l'email dell'utente loggato come email dell'autore
                                 out.println(email);
                                 //attendo risposta dal server
