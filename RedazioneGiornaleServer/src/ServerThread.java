@@ -17,8 +17,8 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class ServerThread extends Thread{
     private static Socket client;
-    private static BufferedReader in;
-    private static PrintWriter out;
+    private BufferedReader in;
+    public PrintWriter out;
     private static DocumentBuilderFactory dbFactory;
     private static DocumentBuilder dBuilder;
     private static Document docNews;
@@ -74,7 +74,7 @@ public class ServerThread extends Thread{
         }
     }
     
-    private static void ControlloCredenziali(String email, String password){
+    private void ControlloCredenziali(String email, String password){
         System.out.println("...controllo delle credenziali...");
         //CONTROLLO DELLE CREDENZIALI
         for(int i=0; i<listUtenti.getLength();i++){
@@ -94,7 +94,7 @@ public class ServerThread extends Thread{
         }
     }
     
-    private static void RichiestaNews(String tipo, String value){
+    private void RichiestaNews(String tipo, String value){
         boolean trovate = false;
         if(tipo.equals("A")){
             for(int i=(listNews.getLength()-1);i>=0;i--){
@@ -139,13 +139,13 @@ public class ServerThread extends Thread{
         out.println("end");
     }
     
-    public static void RegistrazioneCredenziali(String email,String password,String nome,String cognome,String telefono,String data_nascita,String indirizzo_residenza,String citta_residenza){
+    public void RegistrazioneCredenziali(String email,String password,String nome,String cognome,String telefono,String data_nascita,String indirizzo_residenza,String citta_residenza){
         dbc.InserisciUtenteXML(email, password, nome, cognome, telefono, data_nascita, indirizzo_residenza, citta_residenza);
         System.out.println("...utente registrato...");
         out.println("Registrazione effettuata correttamente");
     }
     
-    public static void SalvataggioNews(String topic,String titolo,String descrizione,String contenuto,String data,String email_autore){
+    public void SalvataggioNews(String topic,String titolo,String descrizione,String contenuto,String data,String email_autore){
         dbc.InserisciNewsXML(topic, titolo, descrizione, contenuto, data, email_autore);
         System.out.println("...news salvata...");
         out.println("Salvataggio news effettuato correttamente");
@@ -207,6 +207,8 @@ public class ServerThread extends Thread{
                             } else if(scelta.equals("C")){
                                 login = false;
                                 break;
+                            }else if(scelta.equals("D")){
+                                Server.aggiungiUtentiMulticasting(this);
                             }
                         }
                     }
@@ -235,8 +237,6 @@ public class ServerThread extends Thread{
                     Server.diminuisciUtentiConnessi();
                     client.close();
                     break;
-                }else if(scelta.equals("D")){
-                    //
                 }
             }
         }catch(Exception ex){

@@ -55,13 +55,13 @@ public static void main(String[] args){
                     if(mem.equals("Login avvenuto con successo")){
                         while(true){
                             //menu scelta operazione
-                            System.out.println(" A) Richiedi news\n B) Inserisci news\n C) Logout");
+                            System.out.println(" A) Richiedi news\n B) Inserisci news\n C) Logout\n D) Multicasting");
                             scelta = scanner.nextLine();
                             out.println(scelta);
 
                             //se sono richieste le news
                             if(scelta.equals("A")){
-                                System.out.println(" A) Ricerca per topic\n B) Ricerca per intervallo \n C) Ricerca per email dell'autore");
+                                System.out.println(" Seleziona il tipo di ricerca:\n A) Ricerca per topic\n B) Ricerca per intervallo \n C) Ricerca per email dell'autore");
                                 scelta = scanner.nextLine();
                                 out.println(scelta);
                                 if(scelta.equals("A")){
@@ -117,6 +117,11 @@ public static void main(String[] args){
                                 System.out.println("\n"+mem+"\n");
                             }else if(scelta.equals("C")){
                                 break;
+                            }else if(scelta.equals("D")){
+                                while(true){
+                                    mem=in.readLine();
+                                    System.out.println(mem);
+                                }
                             }
                         }
                     }

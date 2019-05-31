@@ -74,10 +74,10 @@ public class DBConnection {
     
     public DBConnection(){
         try{
-            //FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            //FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
-            FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            //FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            //FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -193,6 +193,8 @@ public class DBConnection {
                 DOMSource source = new DOMSource(doc);
                 StreamResult result = new StreamResult(FileNews);
                 transformer.transform(source, result);
+                
+                Server.invioNewsMulticasting(topic, titolo, descrizione, contenuto, data, email_autore);
             }catch(Exception e){
                 e.printStackTrace();
             }
