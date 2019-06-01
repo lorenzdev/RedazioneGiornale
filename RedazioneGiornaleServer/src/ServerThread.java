@@ -32,6 +32,13 @@ public class ServerThread extends Thread{
     private static File FileUtenti;
     private static File FileNews;
     
+    /**
+     * E' il costruttore con parametri che tra i suoi compiti, ottiene dai file news e utenti una lista di elementi che utilizzerà per fare la ricerca delle news e il controllo delle credenziali inserite dall'utente.
+     * @param client è il socket utilizzato per la comunicazione con il client.
+     * @param news è il file XML contenente le news inserite dagli utenti.
+     * @param utenti è il file XML contenente gli utenti registrati al server.
+     * @param dbc è la classe che si occupa della conversione da DB a XML e viceversa oltre che dell'inserimento di utenti e news nei file XML.
+     */
     public ServerThread(Socket client,File news,File utenti, DBConnection dbc){
         this.FileUtenti = utenti;
         this.FileNews = news;
@@ -54,6 +61,10 @@ public class ServerThread extends Thread{
             ex.printStackTrace();
         }
     }
+    
+    /**
+     * Apre il file XML contenente gli utenti (inclusi quelli appena inseriti) e lo sostituisce alla versione precedente dello stesso.
+     */
     private static void AggiornaFileUtentiUtilizzato(){
         try{
             docUtenti = dBuilder.parse(ServerThread.FileUtenti);
@@ -64,6 +75,9 @@ public class ServerThread extends Thread{
         }
     }
     
+    /**
+     * Apre il file XML contenente le news (incluse quelle appena inserite) e lo sostituisce alla versione precedente dello stesso.
+     */
     private static void AggiornaFileNewsUtilizzato(){
         try{
             docNews = dBuilder.parse(ServerThread.FileNews);
@@ -74,6 +88,11 @@ public class ServerThread extends Thread{
         }
     }
     
+    /**
+     * Effettua il controllo delle credenziali passate al metodo stesso, confrontandole con quelle salvate nel file XML.
+     * @param email è l'email con cui l'utente vuole fare il login.
+     * @param password  è la password con cui l'utente vuole fare il login.
+     */
     private void ControlloCredenziali(String email, String password){
         System.out.println("...controllo delle credenziali...");
         //CONTROLLO DELLE CREDENZIALI
@@ -94,6 +113,14 @@ public class ServerThread extends Thread{
         }
     }
     
+    /**
+     * Ritorna tutte le news che soddisfano il tipo di criterio con cui si vuole fare la ricerca:
+     * A) ricerca per topic
+     * B) ricerca per mese
+     * C) ricerca per autore
+     * @param tipo è il tipo di ricerca che si vuole effettuare.
+     * @param value è il valore di confronto da utilizzare per la ricerca.
+     */
     private void RichiestaNews(String tipo, String value){
         boolean trovate = false;
         if(tipo.equals("A")){
@@ -139,12 +166,32 @@ public class ServerThread extends Thread{
         out.println("end");
     }
     
+    /**
+     * Richiama il metodo della classe DBConnection che permette di inserire un nuovo utente nel file XML degli utenti.
+     * @param email è l'email con cui l'utente vuole registrarsi.
+     * @param password è la password con cui l'utente vuole registrarsi.
+     * @param nome è il nome dell'utente.
+     * @param cognome è il cognome dell'utente.
+     * @param telefono è il recapito telefonico dell'utente.
+     * @param data_nascita è la data di nascita dell'utente.
+     * @param indirizzo_residenza è l'indirizzo di residenza dell'utente.
+     * @param citta_residenza  è la città di residenza dell'utente.
+     */
     public void RegistrazioneCredenziali(String email,String password,String nome,String cognome,String telefono,String data_nascita,String indirizzo_residenza,String citta_residenza){
         dbc.InserisciUtenteXML(email, password, nome, cognome, telefono, data_nascita, indirizzo_residenza, citta_residenza);
         System.out.println("...utente registrato...");
         out.println("Registrazione effettuata correttamente");
     }
     
+    /**
+     * Richiama il metodo della classe DBConnection per il salvataggio di una nuova news all'interno del file XML contenente le news.
+     * @param topic è il topic della news.
+     * @param titolo è il titolo della news.
+     * @param descrizione è la descrizione della news.
+     * @param contenuto è il contenuto della news.
+     * @param data è la data di pubblicazione della news.
+     * @param email_autore  è l'email dell'autore della news.
+     */
     public void SalvataggioNews(String topic,String titolo,String descrizione,String contenuto,String data,String email_autore){
         dbc.InserisciNewsXML(topic, titolo, descrizione, contenuto, data, email_autore);
         System.out.println("...news salvata...");

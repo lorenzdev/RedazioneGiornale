@@ -52,6 +52,9 @@ public class DBConnection {
     private static File FileUtenti;
     private static File FileNews;
     
+    /**
+     * Apre il file XML contenente gli utenti (inclusi quelli appena inseriti) e lo sostituisce alla versione precedente dello stesso.
+     */
     private static void AggiornaFileUtentiUtilizzato(){
         try{
             docUtenti = dBuilder.parse(DBConnection.FileUtenti);
@@ -62,6 +65,9 @@ public class DBConnection {
         }
     }
     
+    /**
+     * Apre il file XML contenente le news (incluse quelle appena inserite) e lo sostituisce alla versione precedente dello stesso.
+     */
     private static void AggiornaFileNewsUtilizzato(){
         try{
             docNews = dBuilder.parse(DBConnection.FileNews);
@@ -72,12 +78,15 @@ public class DBConnection {
         }
     }
     
+    /**
+     * E' il costruttore della classe. Al primo avvio apre i file xml contenenti gli utenti e le news (appena scaricati dal database) e crea la connessione al database che verrà utilizzata per le query.
+     */
     public DBConnection(){
         try{
-            FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            //FileNews = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
-            FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
-            //FileUtenti = new File("C:\\Users\\chrit\\Desktop\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            //FileNews = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            FileNews = new File("C:\\Program Files\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
+            //FileUtenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
+            FileUtenti = new File("C:\\Program Files\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
     
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -100,6 +109,17 @@ public class DBConnection {
         }
     }
     
+    /**
+     * Aggiunge al file XML contenente gli utenti un nuovo utente, composto dai parametri del metodo stesso. Aggiunge il campo stato_modifica impostandolo a 1 (indica che il dato sarà poi da salvare nel database perchè è stato appena inserito).
+     * @param email è la mail con la quale l'utente vuole registrarsi al server
+     * @param password è la password con cui l'utente vuole registrarsi al server.
+     * @param nome è il nome dell'utente.
+     * @param cognome è il cognome dell'utente.
+     * @param telefono è il telefono dell'utente.
+     * @param data_nascita è la data di nascita dell'utente.
+     * @param indirizzo_residenza è l'indirizzo di residenza dell'utente.
+     * @param citta_residenza è la città di residenza dell'utente.
+     */
     public static void InserisciUtenteXML(String email, String password, String nome, String cognome, String telefono, String data_nascita, String indirizzo_residenza, String citta_residenza){
         try{
             AggiornaFileUtentiUtilizzato();
@@ -152,6 +172,15 @@ public class DBConnection {
         }   
     }
     
+    /**
+     * Aggiunge al file XML contenente le news una nuova news, composta dai parametri del metodo stesso. Aggiunge il campo stato_modifica impostandolo a 1 (indica che il dato sarà poi da salvare nel database perchè è stato appena inserito).
+     * @param topic è il topic della news
+     * @param titolo è il titolo della news.
+     * @param descrizione è la descrizione della news.
+     * @param contenuto è il contenuto della news.
+     * @param data è la data di pubblicazione della news.
+     * @param email_autore  è l'email dell'autore della news.
+     */
     public static void InserisciNewsXML(String topic, String titolo, String descrizione, String contenuto, String data, String email_autore){
             try{
                 AggiornaFileNewsUtilizzato();
@@ -200,6 +229,9 @@ public class DBConnection {
             }
     }
     
+    /**
+     * Converte i dati contenuti nelle tabelle Utenti e News del database in due file XML salvati in locale chiamati Utenti.xml e News.xml. Aggiunge il campo stato_modifica impostandolo a 0 (indica che il dato non sarà poi da salvare nel database perchè non è stato appena inserito).
+     */
     public static void ConversioneDBtoXML(){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -297,6 +329,9 @@ public class DBConnection {
       }
     }
     
+    /**
+     * Fa le query di inserimento dei dati contenuti nei file Utenti.xml e News.xml, degli utenti e delle news che hanno il campo stato_modifica a 1 (indica che la news o l'utente è stato appena inserito e che deve essere caricato anche nel database).
+     */
     public static void ConversioneXMLtoDB(){
         try{
             AggiornaFileNewsUtilizzato();
