@@ -17,7 +17,9 @@ import javax.xml.transform.stream.StreamResult;
  * @author totaro.christian
  */
 public class Server {
+    private static boolean chiusura_server = false;
     private static int porta = 9999;
+    private static int porta_chiudi = 9998;
     //private static File news = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
     private static File news = new File("C:\\Program Files\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\News.xml");
     //private static File utenti = new File("C:\\Users\\totaro.christian.VOLTA\\AppData\\Local\\Programs\\Git\\RedazioneGiornale\\RedazioneGiornaleServer\\Utenti.xml");
@@ -25,7 +27,7 @@ public class Server {
     private static DBConnection dbc;
     private static int utenti_connessi = 0;
     private static ArrayList<ServerThread> multicasting = new ArrayList<ServerThread>();
-    
+
     /**
      * Incrementa il numero di utenti connessi al server.
      */
@@ -75,10 +77,10 @@ public class Server {
             System.out.println("...conversione database in xml...");
             dbc = new DBConnection();
             while(true){
-               /* if(utenti_connessi == 0){
+                if(utenti_connessi == 0){
                     dbc.ConversioneXMLtoDB();
                     dbc.ConversioneDBtoXML();
-                }*/
+                }
                 System.out.println("    [utenti connessi: "+utenti_connessi+" ]");
                 System.out.println("...in attesa di connessioni...");
                 Socket client = server.accept();
